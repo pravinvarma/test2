@@ -1,0 +1,11 @@
+<h5>Refine Flight Search</h5>
+
+<div class="range-slider-wrapper">
+    <div class="rangeValues">
+        {{vm.min | currency:'₹'}}
+    </div>
+    <input id="ageInputId" name="price" type="range" max={{vm.max}} ng-model="vm.value" value="vm.max" min={{vm.min}}>
+    <div class="output-value">{{vm.value | currency:'₹'}}</div>
+    <div class="rangeValues right">{{vm.max | currency:'₹'}}
+    </div>
+</div>

@@ -1,0 +1,19 @@
+.range-slider-wrapper {
+    position: relative;
+    text-align: center;
+}
+
+.output-value {
+    padding: 2px;
+    font-weight: bold;
+}
+
+.rangeValues {
+    position: absolute;
+    top: 21px;
+}
+
+.right {
+    top: 21px;
+    right:0
+}

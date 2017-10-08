@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flight Search | Pravin Varma</title>
+    <link rel="stylesheet" href="dist/style.css">
+    <script src="dist/vendor.min.js"></script>
+    <script src="dist/scripts.min.js"></script>
+</head>
+
+<body ng-app="flightSearchModule" ng-controller="flightSearchController as vm" ng-cloak>
+    
+    <div data-ng-if="loading" class="loaderBG">
+        <md-progress-circular md-mode="indeterminate" class="loader"></md-progress-circular>
+    </div>
+    
+    <div class="container">
+        <aside ng-class="(!vm.onwardFlightData) ? 'onload' :'ondataLoad'">
+            <div class="sidbar-inner-wrapper">
+            <div ng-hide="vm.isSearchDisplayed">
+                <form name="vm.onewayform">
+                    <div>
+                        <ul class="tabs clearfix" ng-init="typeoftravel = 'oneway'">
+                            <li ng-click="typeoftravel= 'oneway'" ng-class="typeoftravel== 'oneway'?'activeTab':''">
+                                <input type="radio" ng-model='typeoftravel' name="typeoftravel" value='oneway' />One Way</li>
+                            <li ng-click="typeoftravel= 'return'" ng-class="typeoftravel== 'return'?'activeTab':''">
+                                <input type="radio" ng-model='typeoftravel' name="typeoftravel" value="return" />Return </li>
+                        </ul>
+                        <div id="oneway" class="tabContentOneway">
+                            <div class="row">
+                                <input type="text" placeholder="Enter Origin City" ng-model="vm.searchoneway.origin" name="onewayOrigin" uib-typeahead="state as state.name for state in vm.airport | filter:$viewValue | limitTo:8" class="form-control" typeahead-min-length=0 required>
+                                <span class="glyphicon glyphicon-sort swap-source-dest" ng-click="vm.swapSourceDest()" ng-disabled="vm.onewayform.onewayOrigin.$invalid || vm.onewayform.onewayDestiny.$invalid"></span>
+                            </div>
+                            <div class="row">
+                                <input type="text" placeholder="Enter Destination City" ng-model="vm.searchoneway.destination" name="onewayDestiny" uib-typeahead="state as state.name for state in vm.airport | filter:$viewValue | limitTo:8" class="form-control" typeahead-min-length=0 typeahead-on-select="vm.onSelected(vm.searchoneway)" required>
+                                <span class="glyphicon glyphicon-alert issue-icon" aria-hidden="true" ng-if="vm.isSourceDestinationSame"></span>
+                            </div>
+                            <div class="row">
+                                <p class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="{{vm.format}}" ng-model="vm.searchoneway.oneway.date" name="onewayDate" is-open="vm.oneWayDatepicker.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="vm.altInputFormats" show-button-bar="false" placeholder="Onward Date" />
+                                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="vm.openOneWayDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                                </p>
+                            </div>
+                            <div class="row" ng-if="typeoftravel == 'return'">
+                                <p class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="{{vm.format}}" placeholder="Return Date" ng-model="vm.searchoneway.return.date" name="returnDate" name="returnDate" is-open="vm.returnWayDatepicker.opened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" alt-input-formats="vm.altInputFormats" show-button-bar="false" />
+                                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="vm.openReturnWayDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                                </p>
+
+                            </div>
+                            <div class="row">
+                                <select placeholder="Passangers">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <button ng-click="vm.flightOneWaySearch(vm.searchoneway)" ng-model="searchString" ng-disabled="vm.onewayform.onewayOrigin.$invalid || vm.onewayform.onewayDestiny.$invalid || vm.onewayform.onewayDate.$invalid || vm.onewayform.returnDate.$invalid || vm.isSourceDestinationSame" class="searchBtn">
+                                    Search a Flight
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div>
+
+                <div class="rangeContainer row" ng-if="vm.onwardFlightData">
+                    <range-slider min="vm.minVal" max="vm.maxVal" value="vm.value"></range-slider>
+                </div>
+            </div>
+              
+
+            </form>
+                </div>
+              <div class="sidebar-inner-wrapper"> <button class="btn-default search-return" ng-show="vm.isSearchDisplayed && !vm.searchoneway.return" ng-click="vm.searchReturnFLights()">Search return flights</button></div>
+        </aside>
+
+        <section ng-if="vm.onwardFlightData">
+            <div ng-show="vm.errorMsg" ng-bind="vm.errorMsg"></div>
+            <fl-breadcrumb 
+                           breadcrumb="vm.breadcrumb" 
+                           onwardFlightData="vm.onwardFlightData" 
+                           searchoneway="vm.searchoneway">
+            </fl-breadcrumb>
+          
+            <fl-flight-list 
+                            onward-flight-data="vm.onwardFlightData" 
+                            return-flight-data="vm.returnFlightData" 
+                            searchoneway="vm.searchoneway" 
+                            breadcrumb="vm.breadcrumb"
+                            value = "vm.value">
+            </fl-flight-list>
+    </section>
+    </div>
+</body>
+
+</html>
