@@ -5,7 +5,7 @@
    
     function flFlightListController(){
         var vm = this;
-        vm.onwardDate = new Date(vm.breadcrumb.oneway.date).toLocaleDateString();
+       /* vm.onwardDate = new Date(vm.breadcrumb.oneway.date).toLocaleDateString();*/
        
     }
 
